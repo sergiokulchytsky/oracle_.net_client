@@ -19,7 +19,7 @@ namespace OracleDB
                                     " ( " +
                                         " ID  NUMBER NOT NULL PRIMARY KEY, " +
                                         " Name VARCHAR2(50) NOT NULL, " +
-                                        " City VARCHAR2(50) " +
+                                        " City VARCHAR2(50) NOT NULL" +
                                     " ) ";
             OracleCommand myCommand = new OracleCommand();
             myCommand.Connection = myConnection;
@@ -27,30 +27,31 @@ namespace OracleDB
             myCommand.CommandText = create;
 
             myCommand.ExecuteNonQuery();
-
+            
             //-------------------------------------------------------
             //INSERT STATEMENT
-
-            string insert = "INSERT INTO Persons (ID, Name, City) VALUES (1, :Name, :City)";
+            string insert = "INSERT INTO Persons (ID, Name, City) VALUES (2, :Name, :City)";
             myCommand = new OracleCommand();
             myCommand.Connection = myConnection;
             myCommand.CommandType = CommandType.Text;
             myCommand.Parameters.Add(new OracleParameter("Name", OracleDbType.Varchar2)).Value = "SERGIO";
             myCommand.Parameters.Add(new OracleParameter("City", OracleDbType.Varchar2)).Value = "Ternopil";
-
             myCommand.CommandText = insert;
             myCommand.ExecuteNonQuery();
+            myCommand.Parameters.Clear();
             
             //------------------------------------------------------
             //UPDATE STATEMENT
-            string update = "UPDATE PERSONS SET Name = :NewName WHERE Name = :Name";
+            string update = "UPDATE Persons SET Persons.Name = :NewName WHERE Persons.Name =  :Name";
             myCommand = new OracleCommand();
             myCommand.Connection = myConnection;
             myCommand.CommandType = CommandType.Text;
-            myCommand.Parameters.Add(new OracleParameter("Name", OracleDbType.Varchar2)).Value = "SERGIO";
+
             myCommand.Parameters.Add(new OracleParameter("NewName", OracleDbType.Varchar2)).Value = "SERHIY";
+            myCommand.Parameters.Add(new OracleParameter("Name", OracleDbType.Varchar2)).Value = "SERGIO";
             myCommand.CommandText = update;
             myCommand.ExecuteNonQuery();
+            myCommand.Parameters.Clear();
             
             //------------------------------------------------------
             //SELECT STATEMENT
@@ -66,6 +67,7 @@ namespace OracleDB
                 Console.WriteLine(reader["Name"]);
             }
             reader.Close();
+            myCommand.Parameters.Clear();
 
             //-----------------------------------------------------
             //DELETE STATEMENT
@@ -78,6 +80,7 @@ namespace OracleDB
    
             myCommand.CommandText = "DROP TABLE Sergio.Persons";
             myCommand.ExecuteNonQuery();
+            myCommand.Parameters.Clear();
 
             //CLOSE CONNECTION
             myConnection.Close();
